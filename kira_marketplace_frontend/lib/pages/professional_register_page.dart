@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth_provider.dart';
 import '../widgets/loading_widget.dart';
+import '../widgets/location_picker_widget.dart';
 import 'home_page.dart';
 
 class ProfessionalRegisterPage extends StatefulWidget {
@@ -26,6 +28,9 @@ class _ProfessionalRegisterPageState extends State<ProfessionalRegisterPage> {
   final _addressController = TextEditingController();
 
   String _documentType = 'CPF';
+  double? _latitude;
+  double? _longitude;
+  bool _obscurePassword = true;
 
   @override
   void initState() {
@@ -66,6 +71,8 @@ class _ProfessionalRegisterPageState extends State<ProfessionalRegisterPage> {
       bio: _bioController.text.trim(),
       city: _cityController.text.trim(),
       address: _addressController.text.trim(),
+      latitude: _latitude,
+      longitude: _longitude,
     );
 
     if (!mounted || authProvider.authResponse == null) return;
@@ -106,10 +113,25 @@ class _ProfessionalRegisterPageState extends State<ProfessionalRegisterPage> {
                         validator: _emailValidator,
                       ),
                       const SizedBox(height: 12),
-                      _textField(
-                        _passwordController,
-                        'Senha',
-                        obscureText: true,
+                      TextFormField(
+                        controller: _passwordController,
+                        obscureText: _obscurePassword,
+                        decoration: InputDecoration(
+                          labelText: 'Senha',
+                          border: const OutlineInputBorder(),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          ),
+                        ),
                         validator: _passwordValidator,
                       ),
                       const SizedBox(height: 12),
@@ -127,7 +149,7 @@ class _ProfessionalRegisterPageState extends State<ProfessionalRegisterPage> {
                       ),
                       const SizedBox(height: 12),
                       DropdownButtonFormField<String>(
-                        value: _documentType,
+                        initialValue: _documentType,
                         decoration: const InputDecoration(
                           labelText: 'Tipo de documento',
                           border: OutlineInputBorder(),
@@ -155,6 +177,15 @@ class _ProfessionalRegisterPageState extends State<ProfessionalRegisterPage> {
                       const SizedBox(height: 12),
                       _textField(_addressController, 'Endereço'),
                       const SizedBox(height: 16),
+                      LocationPickerWidget(
+                        onLocationSelected: (LatLng? latlng) {
+                          setState(() {
+                            _latitude = latlng?.latitude;
+                            _longitude = latlng?.longitude;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 24),
                       FilledButton.icon(
                         onPressed: authProvider.isLoading ? null : _submit,
                         icon: const Icon(Icons.check),
@@ -165,6 +196,7 @@ class _ProfessionalRegisterPageState extends State<ProfessionalRegisterPage> {
                         Text(
                           authProvider.errorMessage!,
                           style: const TextStyle(color: Colors.red),
+                          textAlign: TextAlign.center,
                         ),
                       ],
                       const SizedBox(height: 24),
@@ -189,7 +221,6 @@ class _ProfessionalRegisterPageState extends State<ProfessionalRegisterPage> {
     TextEditingController controller,
     String label, {
     TextInputType keyboardType = TextInputType.text,
-    bool obscureText = false,
     int maxLines = 1,
     bool isRequired = true,
     String? Function(String?)? validator,
@@ -197,7 +228,6 @@ class _ProfessionalRegisterPageState extends State<ProfessionalRegisterPage> {
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
-      obscureText: obscureText,
       maxLines: maxLines,
       decoration: InputDecoration(
         labelText: label,

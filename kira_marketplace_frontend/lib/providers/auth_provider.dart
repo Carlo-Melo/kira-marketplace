@@ -44,8 +44,10 @@ class AuthProvider extends ChangeNotifier {
     required String bio,
     required String city,
     required String address,
+    double? latitude,
+    double? longitude,
   }) async {
-    await _register({
+    final body = <String, dynamic>{
       'name': name,
       'email': email,
       'password': password,
@@ -57,7 +59,11 @@ class AuthProvider extends ChangeNotifier {
       'bio': bio,
       'city': city,
       'address': address,
-    });
+    };
+    if (latitude != null) body['latitude'] = latitude;
+    if (longitude != null) body['longitude'] = longitude;
+
+    await _register(body);
   }
 
   Future<void> _register(Map<String, dynamic> body) async {

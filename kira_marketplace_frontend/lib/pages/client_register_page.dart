@@ -19,6 +19,7 @@ class _ClientRegisterPageState extends State<ClientRegisterPage> {
   final _passwordController = TextEditingController();
   final _cpfController = TextEditingController();
   final _phoneController = TextEditingController();
+  bool _obscurePassword = true;
 
   @override
   void initState() {
@@ -90,10 +91,25 @@ class _ClientRegisterPageState extends State<ClientRegisterPage> {
                         validator: _emailValidator,
                       ),
                       const SizedBox(height: 12),
-                      _textField(
-                        _passwordController,
-                        'Senha',
-                        obscureText: true,
+                      TextFormField(
+                        controller: _passwordController,
+                        obscureText: _obscurePassword,
+                        decoration: InputDecoration(
+                          labelText: 'Senha',
+                          border: const OutlineInputBorder(),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          ),
+                        ),
                         validator: _passwordValidator,
                       ),
                       const SizedBox(height: 12),
