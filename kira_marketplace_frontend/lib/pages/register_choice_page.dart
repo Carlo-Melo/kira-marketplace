@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'client_register_page.dart';
-import 'professional_register_page.dart';
-
 class RegisterChoicePage extends StatelessWidget {
   const RegisterChoicePage({super.key});
 
@@ -44,11 +41,7 @@ class RegisterChoicePage extends StatelessWidget {
                     title: 'Sou cliente',
                     subtitle: 'Quero agendar procedimentos estéticos',
                     onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => const ClientRegisterPage(),
-                        ),
-                      );
+                      Navigator.of(context).pushNamed('/register-client');
                     },
                   ),
                   const SizedBox(height: 16),
@@ -58,12 +51,28 @@ class RegisterChoicePage extends StatelessWidget {
                     title: 'Sou profissional',
                     subtitle: 'Quero oferecer meus serviços',
                     onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => const ProfessionalRegisterPage(),
-                        ),
-                      );
+                      Navigator.of(context).pushNamed('/register-professional');
                     },
+                  ),
+                  const SizedBox(height: 32),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('Já tem uma conta? '),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pushNamed('/login');
+                        },
+                        child: Text(
+                          'Faça login',
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

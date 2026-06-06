@@ -1,10 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/auth_provider.dart';
+import 'client_home_page.dart';
+import 'professional_home_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = context.watch<AuthProvider>();
+    final role = authProvider.authResponse?.role;
+
+    // Redireciona para a página apropriada baseado na role
+    if (role == 'ROLE_CLIENT') {
+      return const ClientHomePage();
+    } else if (role == 'ROLE_PROFESSIONAL') {
+      return const ProfessionalHomePage();
+    }
+
+    // Página padrão se a role não for reconhecida
     return Scaffold(
       appBar: AppBar(
         title: const Text('Kira'),
